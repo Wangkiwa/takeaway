@@ -141,11 +141,12 @@
   .shop_container {
     .shop_list {
       .shop_li {
+        border-bottom: 1px solid #f1f1f1;
+        box-sizing: border-box;
         a {
           display: block;
           width: 100%;
           height: 2.1rem;
-          background-color: #02a774;
           padding: 0.3rem 0.16rem;
           box-sizing: border-box;
           display: flex;
@@ -159,7 +160,6 @@
           }
           .shop_right {
             width: 77%;
-            background-color: antiquewhite;
             .shop_detail_header {
               display: flex;
               justify-content: space-between;
@@ -259,8 +259,8 @@
                   border-radius: 2px;
                 }
                 .delivery_right {
-                  color: #02a774;
-                  border: 1px solid #02a774;
+                  color: #409eff;
+                  border: 1px solid #409eff;
                 }
               }
             }

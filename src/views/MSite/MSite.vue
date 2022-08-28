@@ -6,119 +6,27 @@
 <template>
   <div class="msite">
     <!-- 首页头部 -->
-    <HeaderTop title="山东省烟台市蓬莱区海滨西路啊啊啊啊啊啊啊">
-      <a href="#" class="header_search" slot="left">
+    <HeaderTop :title="address.name">
+      <router-link to="/search" class="header_search" slot="left">
         <i class="iconfont icon-sousuo"></i>
-      </a>
-      <a href="#" slot="right">
-        <span>登录|注册</span>
-      </a>
+      </router-link>
+      <router-link to="/login" slot="right"><span>登录|注册</span></router-link>
     </HeaderTop>
-
     <!-- 首页导航 -->
     <nav class="msite_nav">
-      <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
-        <van-swipe-item>
+      <van-swipe class="my-swipe" :autoplay="3000" indicator-color="#409EFF">
+        <van-swipe-item v-for="(categorys, index) in categorysArr" :key="index">
           <div class="swiper-slide">
-            <a href="javascript:;" class="link_to_food">
+            <a
+              href="javascript:;"
+              v-for="(category, index) in categorys"
+              :key="index"
+              class="link_to_food"
+            >
               <div class="food_container">
-                <img src="../../../static/nav/1.jpg" alt="" />
+                <img :src="imgBaseUrl + category.image_url" alt="" />
               </div>
-              <span>甜品音频</span>
-            </a>
-            <a href="javascript:;" class="link_to_food">
-              <div class="food_container">
-                <img src="../../../static/nav/1.jpg" alt="" />
-              </div>
-              <span>甜品音频</span>
-            </a>
-            <a href="javascript:;" class="link_to_food">
-              <div class="food_container">
-                <img src="../../../static/nav/1.jpg" alt="" />
-              </div>
-              <span>甜品音频</span>
-            </a>
-            <a href="javascript:;" class="link_to_food">
-              <div class="food_container">
-                <img src="../../../static/nav/1.jpg" alt="" />
-              </div>
-              <span>甜品音频</span>
-            </a>
-            <a href="javascript:;" class="link_to_food">
-              <div class="food_container">
-                <img src="../../../static/nav/1.jpg" alt="" />
-              </div>
-              <span>甜品音频</span>
-            </a>
-            <a href="javascript:;" class="link_to_food">
-              <div class="food_container">
-                <img src="../../../static/nav/1.jpg" alt="" />
-              </div>
-              <span>甜品音频</span>
-            </a>
-            <a href="javascript:;" class="link_to_food">
-              <div class="food_container">
-                <img src="../../../static/nav/1.jpg" alt="" />
-              </div>
-              <span>甜品音频</span>
-            </a>
-            <a href="javascript:;" class="link_to_food">
-              <div class="food_container">
-                <img src="../../../static/nav/1.jpg" alt="" />
-              </div>
-              <span>甜品音频</span>
-            </a>
-          </div>
-        </van-swipe-item>
-        <van-swipe-item>
-          <div class="swiper-slide">
-            <a href="javascript:;" class="link_to_food">
-              <div class="food_container">
-                <img src="../../../static/nav/1.jpg" alt="" />
-              </div>
-              <span>甜品音频</span>
-            </a>
-            <a href="javascript:;" class="link_to_food">
-              <div class="food_container">
-                <img src="../../../static/nav/1.jpg" alt="" />
-              </div>
-              <span>甜品音频</span>
-            </a>
-            <a href="javascript:;" class="link_to_food">
-              <div class="food_container">
-                <img src="../../../static/nav/1.jpg" alt="" />
-              </div>
-              <span>甜品音频</span>
-            </a>
-            <a href="javascript:;" class="link_to_food">
-              <div class="food_container">
-                <img src="../../../static/nav/1.jpg" alt="" />
-              </div>
-              <span>甜品音频</span>
-            </a>
-            <a href="javascript:;" class="link_to_food">
-              <div class="food_container">
-                <img src="../../../static/nav/1.jpg" alt="" />
-              </div>
-              <span>甜品音频</span>
-            </a>
-            <a href="javascript:;" class="link_to_food">
-              <div class="food_container">
-                <img src="../../../static/nav/1.jpg" alt="" />
-              </div>
-              <span>甜品音频</span>
-            </a>
-            <a href="javascript:;" class="link_to_food">
-              <div class="food_container">
-                <img src="../../../static/nav/1.jpg" alt="" />
-              </div>
-              <span>甜品音频</span>
-            </a>
-            <a href="javascript:;" class="link_to_food">
-              <div class="food_container">
-                <img src="../../../static/nav/1.jpg" alt="" />
-              </div>
-              <span>甜品音频</span>
+              <span>{{ category.title }}</span>
             </a>
           </div>
         </van-swipe-item>
@@ -139,10 +47,42 @@
 <script>
   import HeaderTop from "../../components/HeaderTop/HeaderTop.vue"
   import ShopList from "../../components/ShopList/ShopList.vue"
+  import { mapState } from "vuex"
   export default {
+    data() {
+      return {
+        imgBaseUrl: "https://fuss10.elemecdn.com",
+      }
+    },
     components: {
       HeaderTop,
       ShopList,
+    },
+    created() {
+      this.$store.dispatch("getCategorys")
+    },
+    computed: {
+      ...mapState(["address", "categorys"]),
+      getSwiperNum() {
+        return Math.ceil(this.categorys.length / 8)
+      },
+      // 根据categorys一维数组生成一个二维数组
+      categorysArr() {
+        const { categorys } = this
+        const max = 8
+        const arr = []
+        let smallArr = []
+        categorys.forEach((item, index) => {
+          if (smallArr.length === 0) {
+            arr.push(smallArr)
+          }
+          smallArr.push(item)
+          if (smallArr.length === max) {
+            smallArr = []
+          }
+        })
+        return arr
+      },
     },
   }
 </script>
@@ -174,9 +114,10 @@
             }
           }
           span {
-            font-size: 0.26rem;
+            font-size: 0.24rem;
             display: block;
             width: 100%;
+            color: #666;
           }
         }
       }
@@ -194,7 +135,6 @@
   .my-swipe .van-swipe-item {
     color: #fff;
     text-align: center;
-    background-color: pink;
     height: 4rem;
   }
 </style>

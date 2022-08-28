@@ -123,7 +123,7 @@
         width: 100%;
         height: 2rem;
         box-sizing: border-box;
-        background: #02a774;
+        background: #409eff;
         color: #7e8c8d;
         border-top: 1px solid #eee;
         padding: 20px 10px;
@@ -231,7 +231,7 @@
           height: 0.4rem;
           margin-left: 0.16rem;
           i {
-            color: #02a774;
+            color: #409eff;
             font-size: 0.6rem;
           }
           .icon-vip {

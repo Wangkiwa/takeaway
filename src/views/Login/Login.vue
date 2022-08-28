@@ -12,14 +12,14 @@
           <a
             href="javascript:;"
             :class="{ on: isShowOn }"
-            @click="isShowOnClass"
+            @click="isShowOn = true"
           >
             短信登录
           </a>
           <a
             href="javascript:;"
             :class="{ on: !isShowOn }"
-            @click="isShowOnClass"
+            @click="isShowOn = false"
           >
             密码登录
           </a>
@@ -77,11 +77,7 @@
         isShowOn: false,
       }
     },
-    methods: {
-      isShowOnClass() {
-        this.isShowOn = !this.isShowOn
-      },
-    },
+    methods: {},
   }
 </script>
 
@@ -99,7 +95,7 @@
         text-align: center;
         h2 {
           font-size: 0.8rem;
-          color: #02a774;
+          color: #379ffc;
           font-weight: bold;
         }
         .login_header_title {
@@ -112,9 +108,9 @@
             margin-right: 0.8rem;
           }
           .on {
-            color: #02a774;
+            color: #409eff;
             font-weight: 700;
-            border-bottom: 2px solid #02a774;
+            border-bottom: 2px solid #409eff;
           }
         }
       }
@@ -137,7 +133,7 @@
                 font: 400 14px Arial;
               }
               input:focus {
-                border: 1px solid #02a774;
+                border: 1px solid #409eff;
               }
             }
             .login_message,
@@ -160,7 +156,7 @@
               font-size: 0.26rem;
               line-height: 0.4rem;
               a {
-                color: #02a774;
+                color: #409eff;
               }
             }
           }
@@ -170,7 +166,7 @@
             height: 0.84rem;
             margin-top: 0.6rem;
             border-radius: 0.08rem;
-            background-color: #4cd96f;
+            background-color: #4da9fd;
             color: #fff;
             border: 0;
             font-size: 0.32rem;

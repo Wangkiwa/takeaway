@@ -16,6 +16,9 @@
     components: {
       FooterGuide,
     },
+    created() {
+      this.$store.dispatch("getAddress")
+    },
   }
 </script>
 

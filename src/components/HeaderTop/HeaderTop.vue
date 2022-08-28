@@ -36,7 +36,7 @@
       position: fixed;
       left: 0;
       right: 0;
-      background-color: #02a774;
+      background-color: #409eff;
       z-index: 3333;
       display: flex;
       justify-content: space-between;
