@@ -25,10 +25,11 @@ export default {
     commit(RECEIVE_CATEGORYS, { categorys: result.data })
   },
   // 异步获取商家列表
-  getShops({ commit, state }) {
+  async getShops({ commit, state }) {
     const { latitude, longitude } = state
     const params = { latitude, longitude }
-    const result = $api.shopList(params)
+    const result = await $api.shopList(params)
+    console.log("result==>", result)
     // 提交mutation
     commit(RECEIVE_SHOPS, { shops: result.data })
   },

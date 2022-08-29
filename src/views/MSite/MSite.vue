@@ -14,23 +14,29 @@
     </HeaderTop>
     <!-- 首页导航 -->
     <nav class="msite_nav">
-      <van-swipe class="my-swipe" :autoplay="3000" indicator-color="#409EFF">
-        <van-swipe-item v-for="(categorys, index) in categorysArr" :key="index">
-          <div class="swiper-slide">
-            <a
-              href="javascript:;"
-              v-for="(category, index) in categorys"
-              :key="index"
-              class="link_to_food"
-            >
-              <div class="food_container">
-                <img :src="imgBaseUrl + category.image_url" alt="" />
-              </div>
-              <span>{{ category.title }}</span>
-            </a>
-          </div>
-        </van-swipe-item>
-      </van-swipe>
+      <div v-if="categorys.length">
+        <van-swipe class="my-swipe" :autoplay="3000" indicator-color="#409EFF">
+          <van-swipe-item
+            v-for="(categorys, index) in categorysArr"
+            :key="index"
+          >
+            <div class="swiper-slide">
+              <a
+                href="javascript:;"
+                v-for="(category, index) in categorys"
+                :key="index"
+                class="link_to_food"
+              >
+                <div class="food_container">
+                  <img :src="imgBaseUrl + category.image_url" alt="" />
+                </div>
+                <span>{{ category.title }}</span>
+              </a>
+            </div>
+          </van-swipe-item>
+        </van-swipe>
+      </div>
+      <img v-else src="./images/msite_back.svg" alt="" />
     </nav>
     <!-- 首页附近商家 -->
     <div class="msite_shop_list">
@@ -60,6 +66,7 @@
     },
     created() {
       this.$store.dispatch("getCategorys")
+      this.$store.dispatch("getShops")
     },
     computed: {
       ...mapState(["address", "categorys"]),
@@ -90,6 +97,7 @@
 <style lang="less">
   .msite_nav {
     width: 100%;
+    height: 4.28rem;
     .my-swipe {
       width: 100%;
       .swiper-slide {
@@ -121,6 +129,10 @@
           }
         }
       }
+    }
+    img {
+      width: 100%;
+      height: 100%;
     }
   }
   .msite_shop_list {

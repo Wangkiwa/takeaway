@@ -6,135 +6,75 @@
 <template>
   <!-- 附近商家 -->
   <div class="shop_container">
-    <ul class="shop_list">
-      <li class="shop_li">
+    <ul class="shop_list" v-if="shops.length">
+      <li class="shop_li" v-for="(shop, index) in shops" :key="index">
         <a href="javascript:;">
           <div class="shop_left">
-            <img src="../../../static/nav/10.jpg" alt="" />
+            <img :src="baseImgUrl + shop.image_path" alt="" />
           </div>
           <div class="shop_right">
             <section class="shop_detail_header">
-              <h4 class="shop_title">嘉禾一品（温都水城）</h4>
+              <h4 class="shop_title">{{ shop.name }}</h4>
               <ul class="shop_detail_ul">
-                <li class="supports">保</li>
-                <li class="supports">准</li>
-                <li class="supports">票</li>
+                <li
+                  class="supports"
+                  v-for="(support, index) in shop.supports"
+                  :key="index"
+                >
+                  {{ support.icon_name }}
+                </li>
               </ul>
             </section>
             <section class="shop_rating_order">
               <section class="shop_rating_order_left">
-                <div class="star star-24">
-                  <span class="star-item on"></span>
-                  <span class="star-item on"></span>
-                  <span class="star-item on"></span>
-                  <span class="star-item on"></span>
-                  <span class="star-item on"></span>
+                <!-- start -->
+                <Star :score="shop.rating" :size="24"></Star>
+                <div class="rating_section">{{ shop.rating }}</div>
+                <div class="order_section">
+                  月售{{ shop.recent_order_num }}单
                 </div>
-                <div class="rating_section">4.7</div>
-                <div class="order_section">月售106单</div>
               </section>
               <section class="shop_rating_order_right">
-                <span class="delivery_style delivery_right">硅谷专送</span>
+                <span class="delivery_style delivery_right">
+                  {{ shop.delivery_mode.text }}
+                </span>
               </section>
             </section>
             <section class="shop_distance">
               <p class="shop_delivery_msg">
-                <span>￥20起送</span>
+                <span>￥{{ shop.float_minimum_order_amount }}起送</span>
                 <span class="segmentation">/</span>
-                <span>配送费约￥5</span>
-              </p>
-            </section>
-          </div>
-        </a>
-      </li>
-      <!--  -->
-      <li class="shop_li">
-        <a href="javascript:;">
-          <div class="shop_left">
-            <img src="../../../static/nav/10.jpg" alt="" />
-          </div>
-          <div class="shop_right">
-            <section class="shop_detail_header">
-              <h4 class="shop_title">嘉禾一品（温都水城）</h4>
-              <ul class="shop_detail_ul">
-                <li class="supports">保</li>
-                <li class="supports">准</li>
-                <li class="supports">票</li>
-              </ul>
-            </section>
-            <section class="shop_rating_order">
-              <section class="shop_rating_order_left">
-                <div class="star star-24">
-                  <span class="star-item on"></span>
-                  <span class="star-item on"></span>
-                  <span class="star-item on"></span>
-                  <span class="star-item on"></span>
-                  <span class="star-item off"></span>
-                </div>
-                <div class="rating_section">4.7</div>
-                <div class="order_section">月售106单</div>
-              </section>
-              <section class="shop_rating_order_right">
-                <span class="delivery_style delivery_right">硅谷专送</span>
-              </section>
-            </section>
-            <section class="shop_distance">
-              <p class="shop_delivery_msg">
-                <span>￥20起送</span>
-                <span class="segmentation">/</span>
-                <span>配送费约￥5</span>
-              </p>
-            </section>
-          </div>
-        </a>
-      </li>
-      <!--  -->
-      <li class="shop_li">
-        <a href="javascript:;">
-          <div class="shop_left">
-            <img src="../../../static/nav/10.jpg" alt="" />
-          </div>
-          <div class="shop_right">
-            <section class="shop_detail_header">
-              <h4 class="shop_title">嘉禾一品（温都水城）</h4>
-              <ul class="shop_detail_ul">
-                <li class="supports">保</li>
-                <li class="supports">准</li>
-                <li class="supports">票</li>
-              </ul>
-            </section>
-            <section class="shop_rating_order">
-              <section class="shop_rating_order_left">
-                <div class="star star-24">
-                  <span class="star-item on"></span>
-                  <span class="star-item on"></span>
-                  <span class="star-item on"></span>
-                  <span class="star-item on"></span>
-                  <span class="star-item half"></span>
-                </div>
-                <div class="rating_section">4.7</div>
-                <div class="order_section">月售106单</div>
-              </section>
-              <section class="shop_rating_order_right">
-                <span class="delivery_style delivery_right">硅谷专送</span>
-              </section>
-            </section>
-            <section class="shop_distance">
-              <p class="shop_delivery_msg">
-                <span>￥20起送</span>
-                <span class="segmentation">/</span>
-                <span>配送费约￥5</span>
+                <span>{{ shop.piecewise_agent_fee.tips }}</span>
               </p>
             </section>
           </div>
         </a>
       </li>
     </ul>
+    <ul v-else>
+      <li v-for="(item, index) in 6" :key="index">
+        <img src="./images/shop_back.svg" alt="" />
+      </li>
+    </ul>
   </div>
 </template>
 
 <script>
-  export default {}
+  import { mapState } from "vuex"
+  import Star from "../Star/Star.vue"
+  export default {
+    data() {
+      return {
+        baseImgUrl: "http://cangdu.org:8001/img/",
+      }
+    },
+    computed: {
+      ...mapState(["shops"]),
+    },
+    components: {
+      Star,
+    },
+  }
 </script>
 
 <style lang="less">
@@ -152,6 +92,7 @@
           display: flex;
           .shop_left {
             width: 23%;
+            margin-right: 0.12rem;
             img {
               display: block;
               width: 100%;
@@ -204,42 +145,7 @@
                 .star {
                   float: left;
                 }
-                .star-36 {
-                  .star-item {
-                    width: 0.3rem;
-                    height: 0.3rem;
-                    display: inline-block;
-                    margin-right: 0.06rem;
-                    background-size: 0.3rem 0.3rem;
-                  }
-                  .on {
-                    background-image: url("./images/stars/star24_on@2x.png");
-                  }
-                  .half {
-                    background-image: url("./images/stars/star24_half@2x.png");
-                  }
-                  .off {
-                    background-image: url("./images/stars/star24_off@2x.png");
-                  }
-                }
-                .star-24 {
-                  .star-item {
-                    width: 0.2rem;
-                    height: 0.2rem;
-                    display: inline-block;
-                    margin-right: 0.06rem;
-                    background-size: 0.2rem 0.2rem;
-                  }
-                  .on {
-                    background-image: url("./images/stars/star36_on@2x.png");
-                  }
-                  .half {
-                    background-image: url("./images/stars/star36_half@2x.png");
-                  }
-                  .off {
-                    background-image: url("./images/stars/star36_off@2x.png");
-                  }
-                }
+
                 .rating_section {
                   color: #ff6000;
                   margin-left: 4px;
