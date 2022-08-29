@@ -6,6 +6,7 @@
 <template>
   <div class="login-wrapper">
     <div class="loginInner">
+      <img :src="captcha" alt="" style="width: 100px" />
       <div class="login_header">
         <h2 class="login_logo">硅谷外卖</h2>
         <div class="login_header_title">
@@ -28,38 +29,72 @@
       <!-- form表单区域 -->
       <div class="login_content">
         <form>
+          <!-- 短信登录 -->
           <div :class="{ on: isShowOn }">
             <section class="login_message">
-              <input type="text" maxlength="11" placeholder="手机号" />
-              <button class="get_verification" disabled="disabled">
+              <input
+                type="text"
+                maxlength="11"
+                placeholder="手机号"
+                v-model="phone"
+                ref="phoneIpt"
+              />
+              <button
+                class="get_verification"
+                ref="getCodeBtn"
+                :disabled="isdisabled"
+                @click.prevent="sendCode"
+              >
                 获取验证码
               </button>
             </section>
             <section class="login_verification">
-              <input type="tel" maxlength="8" placeholder="验证码" />
+              <input
+                type="tel"
+                maxlength="8"
+                placeholder="验证码"
+                v-model="code"
+              />
             </section>
             <section class="login_hint">
               温馨提示：未注册硅谷外卖帐号的手机号，登录时将自动注册，且代表已同意
               <a href="javascript:;">《用户服务协议》</a>
             </section>
           </div>
+          <!-- 密码登录 -->
           <div :class="{ on: !isShowOn }">
             <section class="login_message">
               <input
                 type="text"
                 maxlength="11"
                 placeholder="手机/邮箱/用户名"
+                v-model="name"
               />
             </section>
             <section class="login_verification">
-              <input type="password" maxlength="8" placeholder="密码" />
+              <input
+                type="password"
+                maxlength="8"
+                placeholder="密码"
+                v-model="pwd"
+              />
             </section>
             <section class="login_hint">
-              <input type="text" maxlength="11" placeholder="验证码" />
-              <img src="./images/captcha.svg" alt="" />
+              <input
+                type="text"
+                maxlength="11"
+                placeholder="验证码"
+                v-model="captcha"
+              />
+              <img
+                src="http://localhost:4000/captcha"
+                alt=""
+                ref="Captcha"
+                @click="getCaptcha"
+              />
             </section>
           </div>
-          <button class="login_submit">登录</button>
+          <button class="login_submit" @click.prevent="loginBtn">登录</button>
         </form>
         <a href="javascript:;" class="about_us">关于我们</a>
       </div>
@@ -67,17 +102,152 @@
         <i class="iconfont icon-jiantou2"></i>
       </a>
     </div>
+    <van-dialog
+      v-model="show"
+      :title="DialogTitle"
+      width="220px"
+      confirmButtonColor="#409EFF"
+      theme="round-button"
+    ></van-dialog>
   </div>
 </template>
 
 <script>
+  import { RECEIVE_USER_INFO } from "./../../store/mutation-types"
   export default {
     data() {
       return {
-        isShowOn: false,
+        isShowOn: false, // false密码登录。true短信登录
+        phone: "", //手机号
+        code: "", //短信验证码
+        isdisabled: true, // 控制disabled
+        name: "", // 用户名
+        pwd: "", // 密码
+        captcha: "", // 图形验证码
+        show: false,
+        DialogTitle: "",
+        computeTime: 0,
       }
     },
-    methods: {},
+    methods: {
+      // 获取验证码
+      async sendCode() {
+        if (!this.computeTime) {
+          this.computeTime = 30
+          let timer = null
+          timer = setInterval(() => {
+            this.isdisabled = true
+            this.$refs.getCodeBtn.style.color = "#cccccc"
+            this.$refs.getCodeBtn.innerText = `已发送(${this.computeTime}s)`
+            this.computeTime--
+            if (this.computeTime === 0) {
+              clearInterval(timer)
+              timer = null
+              this.$refs.getCodeBtn.innerText = `获取验证码`
+              this.isdisabled = false
+              this.$refs.getCodeBtn.style.color = "#000"
+            }
+          }, 1000)
+          const res = await this.$api.sendCode({ phone: this.phone })
+          if (res.code === 1) {
+            // 发送失败
+            this.show = true
+            this.DialogTitle = res.msg + "！"
+            clearInterval(timer)
+            this.computeTime = 0
+            timer = null
+          } else if (res.code === 0) {
+            this.show = true
+            this.DialogTitle = "验证码已发送！"
+          }
+        }
+      },
+      // 获取图形验证码
+      getCaptcha() {
+        this.$refs.Captcha.src =
+          "http://localhost:4000/captcha?time" + Date.now()
+      },
+      // 登录按钮
+      async loginBtn() {
+        if (this.isShowOn) {
+          // 短信登录
+          const { phone, code } = this
+          const PhoneNumber =
+            /^1(3[0-9]|4[01456879]|5[0-35-9]|6[2567]|7[0-8]|8[0-9]|9[0-35-9])\d{8}$/.test(
+              phone
+            )
+          if (!PhoneNumber) {
+            this.DialogTitle = "手机号不正确！"
+            this.show = true
+            return
+          } else if (!/^\d{6}$/.test(code)) {
+            this.DialogTitle = "验证码必须是6位数字！"
+            this.show = true
+            return
+          }
+          // TODO：手机号短信登录
+          const res = await this.$api.smsLogin({ phone, code })
+          if (res.code === 0) {
+            // 登录成功
+            this.$toast.success("登陆成功！")
+            // 存储用户信息vuex
+            this.$store.commit(RECEIVE_USER_INFO, { userInfo: res.data })
+            // 跳转路由
+            this.$router.replace("/profile")
+            this.phone = ""
+            this.code = ""
+          } else {
+            // 登录失败
+            this.getCaptcha()
+            this.$toast.fail(res.msg + "！")
+          }
+        } else {
+          // 密码登录
+          const { name, pwd, captcha } = this
+          if (!name) {
+            this.DialogTitle = "请输入手机号/邮箱/用户名！"
+            this.show = true
+            return
+          } else if (!pwd) {
+            this.DialogTitle = "请输入密码！"
+            this.show = true
+            return
+          } else if (!captcha) {
+            this.DialogTitle = "请输入验证码！"
+            this.show = true
+            return
+          }
+          // TODO：用户密码登录
+          const res = await this.$api.PwdLogin({ name, pwd, captcha })
+          if (res.code === 0) {
+            // 登录成功
+            this.$toast.success("登陆成功！")
+            // 存储用户信息vuex
+            this.$store.commit(RECEIVE_USER_INFO, { userInfo: res.data })
+            // 跳转路由
+            this.$router.replace("/profile")
+            this.name = ""
+            this.pwd = ""
+            this.captcha = ""
+          } else {
+            // 登录失败
+            this.getCaptcha()
+            this.$toast.fail(res.msg + "！")
+          }
+        }
+      },
+    },
+    watch: {
+      phone(val) {
+        if (val.length >= 11) {
+          this.isdisabled = false
+          this.$refs.getCodeBtn.style.color = "#000"
+        } else {
+          this.isdisabled = true
+          this.$refs.getCodeBtn.style.color = "#cccccc"
+        }
+      },
+    },
   }
 </script>
 
@@ -152,7 +322,6 @@
               }
             }
             .login_hint {
-              color: #999;
               font-size: 0.26rem;
               line-height: 0.4rem;
               a {

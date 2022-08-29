@@ -10,7 +10,12 @@
       <router-link to="/search" class="header_search" slot="left">
         <i class="iconfont icon-sousuo"></i>
       </router-link>
-      <router-link to="/login" slot="right"><span>登录|注册</span></router-link>
+      <router-link :to="userInfo._id ? 'userinfo' : '/login'" slot="right">
+        <span v-if="!userInfo._id">登录|注册</span>
+        <span v-else>
+          <i class="iconfont icon-person"></i>
+        </span>
+      </router-link>
     </HeaderTop>
     <!-- 首页导航 -->
     <nav class="msite_nav">
@@ -69,7 +74,7 @@
       this.$store.dispatch("getShops")
     },
     computed: {
-      ...mapState(["address", "categorys"]),
+      ...mapState(["address", "categorys", "userInfo"]),
       getSwiperNum() {
         return Math.ceil(this.categorys.length / 8)
       },

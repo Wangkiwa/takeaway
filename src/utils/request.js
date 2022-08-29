@@ -22,12 +22,12 @@ const instance = axios.create({
 */
 instance.interceptors.response.use(res => {
   const { code, data, msg } = res.data
-  if (code !== 0) {
-    return Promise.reject(msg || INFORMATION_ERROR)
+  if (code === 1) {
+    return { code, msg }
   } else if (code === 0) {
     return { data, code }
   } else {
-    return Promise.reject(msg || NEXTWORK_ERROR)
+    return res.data ? res.data : Promise.reject(msg || NEXTWORK_ERROR)
   }
 })
 /* 
