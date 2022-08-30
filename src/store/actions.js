@@ -7,6 +7,7 @@ import {
   RECEIVE_ADDRESS,
   RECEIVE_CATEGORYS,
   RECEIVE_SHOPS,
+  RECEIVE_USER_INFO,
 } from "./mutation-types"
 import $api from "../api/index"
 export default {
@@ -32,5 +33,16 @@ export default {
     console.log("result==>", result)
     // 提交mutation
     commit(RECEIVE_SHOPS, { shops: result.data })
+  },
+  // 记录用户信息
+  recordUser({ commit }, { userInfo }) {
+    commit(RECEIVE_USER_INFO, { userInfo })
+  },
+  // 自动登录
+  async getUserInfo({ commit }) {
+    const res = await $api.userInfo()
+    if (res.code === 0) {
+      commit(RECEIVE_USER_INFO, { userInfo: res.data })
+    }
   },
 }

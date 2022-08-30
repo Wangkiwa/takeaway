@@ -1,5 +1,5 @@
 <!--
- * @Descripttion: 
+ * @Descripttion: 根组件
  * @Author: TaoWang
  * @Date: 2022-08-26 14:42:03
 -->
@@ -18,6 +18,7 @@
     },
     created() {
       this.$store.dispatch("getAddress")
+      this.$store.dispatch("getUserInfo")
     },
   }
 </script>

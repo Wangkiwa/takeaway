@@ -113,7 +113,6 @@
 </template>
 
 <script>
-  import { RECEIVE_USER_INFO } from "./../../store/mutation-types"
   export default {
     data() {
       return {
@@ -191,7 +190,7 @@
             // 登录成功
             this.$toast.success("登陆成功！")
             // 存储用户信息vuex
-            this.$store.commit(RECEIVE_USER_INFO, { userInfo: res.data })
+            this.$store.dispatch("recordUser", { userInfo: res.data })
             // 跳转路由
             this.$router.replace("/profile")
             this.phone = ""
@@ -223,7 +222,8 @@
             // 登录成功
             this.$toast.success("登陆成功！")
             // 存储用户信息vuex
-            this.$store.commit(RECEIVE_USER_INFO, { userInfo: res.data })
+            this.$store.dispatch("recordUser", { userInfo: res.data })
+
             // 跳转路由
             this.$router.replace("/profile")
             this.name = ""

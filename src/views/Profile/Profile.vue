@@ -105,19 +105,54 @@
           </span>
         </div>
       </a>
+      <div v-if="userInfo._id">
+        <van-button @click="loginOutBtn" block type="info" native-type="submit">
+          退出登录
+        </van-button>
+      </div>
     </section>
+    <!-- 提示Dialog -->
+    <van-dialog
+      v-model="showLogoutDialog"
+      title="确认要退出吗?"
+      show-cancel-button
+      show-confirm-button
+      @confirm="dialogConfirm"
+    ></van-dialog>
   </div>
 </template>
 
 <script>
   import { mapState } from "vuex"
+  import { RESET_USER_INFO } from "../../store/mutation-types"
   import HeaderTop from "../../components/HeaderTop/HeaderTop.vue"
   export default {
+    data() {
+      return {
+        showLogoutDialog: false,
+      }
+    },
     computed: {
       ...mapState(["userInfo"]),
     },
     components: {
       HeaderTop,
+    },
+    methods: {
+      loginOutBtn() {
+        this.showLogoutDialog = true
+      },
+      // 退出
+      async dialogConfirm() {
+        // TODO: 退出
+        const res = await this.$api.loginOut()
+        if (res.code === 0) {
+          this.$store.commit(RESET_USER_INFO)
+          this.$toast.success("已退出！")
+        } else {
+          this.$toast.success("退出失败")
+        }
+      },
     },
   }
 </script>
