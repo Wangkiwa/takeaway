@@ -20,6 +20,11 @@
       this.$store.dispatch("getAddress")
       this.$store.dispatch("getUserInfo")
     },
+    mounted() {
+      this.$store.dispatch("getShopInfo")
+      this.$store.dispatch("getShopRatings")
+      this.$store.dispatch("getShopGoods")
+    },
   }
 </script>
 

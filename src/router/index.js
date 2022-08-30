@@ -50,5 +50,24 @@ export default new VueRouter({
       path: "/login",
       component: () => import("../views/Login/Login.vue"),
     },
+    {
+      path: "/shop",
+      component: () => import("../views/Shop/Shop.vue"),
+      redirect: "/shop/goods",
+      children: [
+        {
+          path: "/shop/goods",
+          component: () => import("../views/Shop/ShopGoods/ShopGoods.vue"),
+        },
+        {
+          path: "/shop/ratings",
+          component: () => import("../views/Shop/ShopRatings/ShopRatings.vue"),
+        },
+        {
+          path: "/shop/info",
+          component: () => import("../views/Shop/ShopInfo/ShopInfo.vue"),
+        },
+      ],
+    },
   ],
 })

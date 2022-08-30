@@ -8,6 +8,9 @@ import {
   RECEIVE_CATEGORYS,
   RECEIVE_SHOPS,
   RECEIVE_USER_INFO,
+  RECEIVE_GOODS,
+  RECEIVE_RATINGS,
+  RECEIVE_INFO,
 } from "./mutation-types"
 import $api from "../api/index"
 export default {
@@ -43,6 +46,28 @@ export default {
     const res = await $api.userInfo()
     if (res.code === 0) {
       commit(RECEIVE_USER_INFO, { userInfo: res.data })
+    }
+  },
+  // 商家信息
+  async getShopInfo({ commit }) {
+    const res = await $api.shopInfo()
+    console.log("sjxx", res)
+    if (res.code === 0) {
+      commit(RECEIVE_INFO, { info: res.data })
+    }
+  },
+  // 获取商家评价列表
+  async getShopRatings({ commit }) {
+    const res = await $api.shopRatings()
+    if (res.code === 0) {
+      commit(RECEIVE_RATINGS, { ratings: res.data })
+    }
+  },
+  // 获取商家商品列表
+  async getShopGoods({ commit }) {
+    const res = await $api.shopGoods()
+    if (res.code === 0) {
+      commit(RECEIVE_GOODS, { goods: res.data })
     }
   },
 }

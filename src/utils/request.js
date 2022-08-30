@@ -9,7 +9,8 @@ import axios from "axios"
 const INFORMATION_ERROR = "获取信息失败"
 const NEXTWORK_ERROR = "网络异常，请稍后重试！"
 const instance = axios.create({
-  baseURL: "/api",
+  // 与mock数据冲突的baseURL
+  // baseURL: "http://localhost:8080",
   timeout: 8000,
 })
 /* 

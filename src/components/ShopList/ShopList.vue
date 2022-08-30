@@ -7,7 +7,12 @@
   <!-- 附近商家 -->
   <div class="shop_container">
     <ul class="shop_list" v-if="shops.length">
-      <li class="shop_li" v-for="(shop, index) in shops" :key="index">
+      <li
+        @click="$router.push('/shop')"
+        class="shop_li"
+        v-for="(shop, index) in shops"
+        :key="index"
+      >
         <a href="javascript:;">
           <div class="shop_left">
             <img :src="baseImgUrl + shop.image_path" alt="" />
@@ -107,6 +112,9 @@
               .shop_title {
                 font-weight: 800;
                 color: #333;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
               }
               .shop_title::before {
                 content: "\54C1\724C";

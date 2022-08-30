@@ -4,19 +4,20 @@
  * @Date: 2022-08-27 20:55:38
  */
 import $http from "../utils/request"
+let BASE_URL = "/api"
 export default {
   //根据经纬度获取位置详情
   location(params) {
     return $http({
       method: "get",
-      url: `/position/${params}`,
+      url: BASE_URL + `/position/${params}`,
     })
   },
   // 获取食品分类列表
   categoriesList(params) {
     return $http({
       method: "get",
-      url: "/index_category",
+      url: BASE_URL + "/index_category",
       data: params,
     })
   },
@@ -24,7 +25,7 @@ export default {
   shopList(params) {
     return $http({
       method: "get",
-      url: "/shops",
+      url: BASE_URL + "/shops",
       data: params,
     })
   },
@@ -32,7 +33,7 @@ export default {
   PwdLogin(params) {
     return $http({
       method: "post",
-      url: "/login_pwd",
+      url: BASE_URL + "/login_pwd",
       data: params,
     })
   },
@@ -40,7 +41,7 @@ export default {
   sendCode(params) {
     return $http({
       method: "get",
-      url: "/sendcode",
+      url: BASE_URL + "/sendcode",
       data: params,
     })
   },
@@ -48,7 +49,7 @@ export default {
   smsLogin(params) {
     return $http({
       method: "post",
-      url: "/login_sms",
+      url: BASE_URL + "/login_sms",
       data: params,
     })
   },
@@ -56,14 +57,36 @@ export default {
   userInfo() {
     return $http({
       method: "get",
-      url: "/userinfo",
+      url: BASE_URL + "/userinfo",
     })
   },
   // 用户登出
   loginOut() {
     return $http({
       method: "get",
-      url: "/logout",
+      url: BASE_URL + "/logout",
+    })
+  },
+  /* MOCK数据部分 */
+  // 获取商家信息
+  shopInfo() {
+    return $http({
+      method: "get",
+      url: "/info",
+    })
+  },
+  // 获取商家评价数组
+  shopRatings() {
+    return $http({
+      method: "get",
+      url: "/ratings",
+    })
+  },
+  // 获取商家商品数组
+  shopGoods() {
+    return $http({
+      method: "get",
+      url: "/goods",
     })
   },
 }
