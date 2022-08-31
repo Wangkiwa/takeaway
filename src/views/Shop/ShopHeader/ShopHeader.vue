@@ -136,9 +136,9 @@
 
 <style lang="less">
   .shop_header {
+    overflow: hidden;
     .shop_nav {
       padding: 5px 10px;
-
       height: 0.8rem;
       background-size: cover;
       a {

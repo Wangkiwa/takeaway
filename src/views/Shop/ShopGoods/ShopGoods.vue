@@ -8,7 +8,17 @@
     <div class="menu-wrapper">
       <ul>
         <!-- current -->
-        <li class="menu-item" v-for="(good, index) in goods" :key="index">
+        <!--  :class="{ current: index == currentIndex }" -->
+        <li
+          class="menu-item"
+          :class="{
+            current: index == currentIndex,
+            activity_menu: index == currentIndex,
+          }"
+          v-for="(good, index) in goods"
+          :key="index"
+          @click="clickMenuItem(index)"
+        >
           <span class="text">
             <img class="icon" v-if="good.icon" :src="good.icon" />
             {{ good.name }}
@@ -17,7 +27,7 @@
       </ul>
     </div>
     <div class="foods-wrapper">
-      <ul>
+      <ul ref="foodUl">
         <li class="food-list-hook" v-for="(good, index) in goods" :key="index">
           <h1 class="title">{{ good.name }}</h1>
           <ul>
@@ -53,13 +63,98 @@
 </template>
 
 <script>
+  import BetterScroll from "better-scroll"
   import { mapState } from "vuex"
   export default {
+    data() {
+      return {
+        scrollY: 0, //右侧 Y 轴滑动的坐标
+        tops: [], // 包含右侧所有分类小列表的 top 值
+      }
+    },
     created() {
       this.$store.dispatch("getShopGoods")
     },
     computed: {
       ...mapState(["goods"]),
+      // 计算得到当前分类的下标
+      currentIndex() {
+        const { scrollY, tops } = this
+        // 根据scrollY的范围找到tops的索引
+        const i = tops.findIndex((top, index) => {
+          // tops [0,723,1027,1476,1594,1805,2032,2336,2825,3487]
+          // 比如 0-693的区间 scrollY大于当前索引项 小于下一项
+          if (scrollY >= top && scrollY < tops[index + 1]) {
+            return true
+          }
+        })
+        return i
+      },
+    },
+    mounted() {
+      // 由于数据是异步获取，所以此时未拿到数据，所以无法更新
+      // console.log("1")
+      // 必须在列表数据显示后创建
+      // new BetterScroll(".menu-wrapper")
+    },
+    updated() {
+      /* 
+        update存在页面卡死问题/(ㄒoㄒ)/~~
+      */
+      // this._initScroll()
+      //  this._initTops()
+    },
+    methods: {
+      _initScroll() {
+        /*
+          收集scrollY
+        */
+        new BetterScroll(".menu-wrapper", {
+          click: true, //默认为false，会阻止click事件的发生
+        })
+        this.foodsScroll = new BetterScroll(".foods-wrapper", {
+          probeType: 2, // 手指滑动(惯性滑动和编码滑动不监视)
+          click: true, //默认为false，会阻止click事件的发生
+        })
+        this.foodsScroll.on("scroll", ({ x, y }) => {
+          // 收集右侧滚动的Y值
+          this.scrollY = Math.abs(y)
+          console.log(this.scrollY)
+        })
+        this.foodsScroll.on("scrollEnd", ({ x, y }) => {
+          // 收集右侧滚动的Y值
+          this.scrollY = Math.abs(y)
+          console.log("scrollEnd", Math.abs(y))
+        })
+      },
+      _initTops() {
+        /*
+        收集top值
+      */
+        let lis = this.$refs.foodUl.getElementsByClassName("food-list-hook")
+        let top = 0
+        this.tops.push(top)
+        Array.from(lis).forEach(item => {
+          top += item.clientHeight
+          this.tops.push(top)
+        })
+      },
+      clickMenuItem(index) {
+        console.log(this.tops[index])
+        const scrollY = this.tops[index]
+        this.scrollY = scrollY
+        this.foodsScroll.scrollTo(0, -scrollY, 300)
+      },
+    },
+    watch: {
+      goods(val) {
+        console.log("2", val)
+        // vue是先更新数据，再异步更新界面，数据虽然更新了，但是页面可能没有更新，所以需要nextTick
+        this.$nextTick(() => {
+          this._initScroll()
+          this._initTops()
+        })
+      },
     },
   }
 </script>
@@ -68,17 +163,21 @@
   .goods {
     width: 100%;
     display: flex;
+    position: absolute;
+    top: 3.9rem;
+    bottom: 0.92rem;
+    overflow: hidden;
     .menu-wrapper {
       width: 20%;
       box-sizing: border-box;
       background: #f3f5f7;
       ul {
+        border-top: 1px solid rgba(7, 17, 27, 0.1);
         .menu-item {
-          height: 1.08rem;
-          width: 1.12rem;
-          padding: 0 0.24rem;
+          padding: 0 0.24rem 0 0.12rem;
           font-weight: 700;
           text-align: center;
+          box-sizing: border-box;
           .icon {
             width: 0.24rem;
             height: 0.24rem;
@@ -95,15 +194,17 @@
             box-sizing: border-box;
           }
         }
+        .activity_menu {
+          border-left: 0.06rem solid #3190e8;
+        }
         .current {
           background-color: #fff;
-          color: #02a774;
+          color: #409eff;
         }
       }
     }
     .foods-wrapper {
       width: 80%;
-      height: 100%;
       ul {
         .food-list-hook {
           .title {
@@ -122,6 +223,7 @@
               padding-bottom: 0.36rem;
               position: relative;
               border: none;
+              border-bottom: 1px solid rgba(7, 17, 27, 0.1);
               .icon {
                 flex: 0 0 57px;
                 margin-right: 0.2rem;
@@ -139,7 +241,7 @@
                   color: #07111b;
                 }
                 .desc {
-                  line-height: 0.2rem;
+                  line-height: 0.24rem;
                   font-size: 0.2rem;
                   color: #93999f;
                   margin-bottom: 0.16rem;

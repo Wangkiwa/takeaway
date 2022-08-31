@@ -6,7 +6,6 @@
 <template>
   <div>
     <ShopHeader></ShopHeader>
-
     <div class="tab">
       <div class="tab-item">
         <router-link exact-active-class="router_active" to="/shop/goods">
@@ -55,10 +54,10 @@
         color: #7e8c8d;
         border-bottom: 1px solid rgba(7, 17, 27, 0.1);
         box-sizing: border-box;
+        font-weight: 900;
       }
       .router_active {
         color: #409eff;
-        border-bottom: 1px solid #409eff;
         // animation: borderMove 5s infinite;
       }
       // @keyframes borderMove {

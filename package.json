@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "axios": "^0.27.2",
+    "better-scroll": "^2.4.2",
     "core-js": "^3.8.3",
     "flexible.js": "^2.0.19",
     "mockjs": "^1.1.0",
