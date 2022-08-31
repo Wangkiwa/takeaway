@@ -52,7 +52,9 @@
                     ￥{{ food.oldPrice }}
                   </span>
                 </div>
-                <div class="cartcontrol-wrapper">CartControl</div>
+                <div class="cartcontrol-wrapper">
+                  <CartControl :food="food"></CartControl>
+                </div>
               </div>
             </li>
           </ul>
@@ -64,6 +66,7 @@
 
 <script>
   import BetterScroll from "better-scroll"
+  import CartControl from "../../../components/CartControl/CartControl.vue"
   import { mapState } from "vuex"
   export default {
     data() {
@@ -71,6 +74,9 @@
         scrollY: 0, //右侧 Y 轴滑动的坐标
         tops: [], // 包含右侧所有分类小列表的 top 值
       }
+    },
+    components: {
+      CartControl,
     },
     created() {
       this.$store.dispatch("getShopGoods")

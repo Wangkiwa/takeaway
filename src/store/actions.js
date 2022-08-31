@@ -11,6 +11,8 @@ import {
   RECEIVE_GOODS,
   RECEIVE_RATINGS,
   RECEIVE_INFO,
+  INCREMENT_FOOD_COUNT,
+  DECREMENT_FOOD_COUNT,
 } from "./mutation-types"
 import $api from "../api/index"
 export default {
@@ -68,6 +70,15 @@ export default {
     const res = await $api.shopGoods()
     if (res.code === 0) {
       commit(RECEIVE_GOODS, { goods: res.data })
+    }
+  },
+  updateFoodCount({ commit }, { food, isAdd }) {
+    if (isAdd) {
+      //增加
+      commit(INCREMENT_FOOD_COUNT, { food })
+    } else {
+      //减少
+      commit(DECREMENT_FOOD_COUNT, { food })
     }
   },
 }
