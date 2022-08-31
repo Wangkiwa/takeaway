@@ -358,6 +358,7 @@
         font-size: 0.32rem;
         height: 160px;
         overflow-y: auto;
+        padding-top: 0.1rem;
         li {
           font-size: 0.26rem;
           margin-bottom: 0.24rem;
