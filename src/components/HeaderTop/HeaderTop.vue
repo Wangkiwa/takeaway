@@ -46,7 +46,7 @@
         line-height: 0.9rem;
         margin-right: 0.12rem;
         i {
-          font-size: 0.6rem;
+          font-size: 0.4rem;
           margin-left: 0.3rem;
         }
       }

@@ -4,79 +4,93 @@
  * @Date: 2022-08-30 13:04:44
 -->
 <template>
-  <div class="goods">
-    <div class="menu-wrapper">
-      <ul>
-        <!-- current -->
-        <!--  :class="{ current: index == currentIndex }" -->
-        <li
-          class="menu-item"
-          :class="{
-            current: index == currentIndex,
-            activity_menu: index == currentIndex,
-          }"
-          v-for="(good, index) in goods"
-          :key="index"
-          @click="clickMenuItem(index)"
-        >
-          <span class="text">
-            <img class="icon" v-if="good.icon" :src="good.icon" />
-            {{ good.name }}
-          </span>
-        </li>
-      </ul>
+  <div>
+    <div class="goods">
+      <div class="menu-wrapper">
+        <ul>
+          <!-- current -->
+          <!--  :class="{ current: index == currentIndex }" -->
+          <li
+            class="menu-item"
+            :class="{
+              current: index == currentIndex,
+              activity_menu: index == currentIndex,
+            }"
+            v-for="(good, index) in goods"
+            :key="index"
+            @click="clickMenuItem(index)"
+          >
+            <span class="text">
+              <img class="icon" v-if="good.icon" :src="good.icon" />
+              {{ good.name }}
+            </span>
+          </li>
+        </ul>
+      </div>
+      <div class="foods-wrapper">
+        <ul ref="foodUl">
+          <li
+            class="food-list-hook"
+            v-for="(good, index) in goods"
+            :key="index"
+          >
+            <h1 class="title">{{ good.name }}</h1>
+            <ul>
+              <li
+                class="food-item"
+                v-for="(food, index) in good.foods"
+                :key="index"
+                @click="isShow(food)"
+              >
+                <div class="icon">
+                  <img :src="food.icon" alt="" />
+                </div>
+                <div class="content">
+                  <h2 class="name">{{ food.name }}</h2>
+                  <p class="desc">{{ food.description }}</p>
+                  <div class="extra">
+                    <span class="count">月售{{ food.sellCount }}份</span>
+                    <span>好评率{{ food.rating }}%</span>
+                  </div>
+                  <div class="price">
+                    <span class="now">￥{{ food.price }}</span>
+                    <span class="old" v-if="food.oldPrice">
+                      ￥{{ food.oldPrice }}
+                    </span>
+                  </div>
+                  <div class="cartcontrol-wrapper">
+                    <CartControl :food="food"></CartControl>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <ShopCart></ShopCart>
     </div>
-    <div class="foods-wrapper">
-      <ul ref="foodUl">
-        <li class="food-list-hook" v-for="(good, index) in goods" :key="index">
-          <h1 class="title">{{ good.name }}</h1>
-          <ul>
-            <li
-              class="food-item"
-              v-for="(food, index) in good.foods"
-              :key="index"
-            >
-              <div class="icon">
-                <img :src="food.icon" alt="" />
-              </div>
-              <div class="content">
-                <h2 class="name">{{ food.name }}</h2>
-                <p class="desc">{{ food.description }}</p>
-                <div class="extra">
-                  <span class="count">月售{{ food.sellCount }}份</span>
-                  <span>好评率{{ food.rating }}%</span>
-                </div>
-                <div class="price">
-                  <span class="now">￥{{ food.price }}</span>
-                  <span class="old" v-if="food.oldPrice">
-                    ￥{{ food.oldPrice }}
-                  </span>
-                </div>
-                <div class="cartcontrol-wrapper">
-                  <CartControl :food="food"></CartControl>
-                </div>
-              </div>
-            </li>
-          </ul>
-        </li>
-      </ul>
-    </div>
+    <Food ref="food" :food="food"></Food>
   </div>
 </template>
 
 <script>
   import BetterScroll from "better-scroll"
+  import Food from "../../../components/Food/Food.vue"
   import CartControl from "../../../components/CartControl/CartControl.vue"
+  import ShopCart from "../../../components/ShopCart/ShopCart.vue"
   import { mapState } from "vuex"
   export default {
     data() {
       return {
         scrollY: 0, //右侧 Y 轴滑动的坐标
         tops: [], // 包含右侧所有分类小列表的 top 值
+        food: {},
       }
     },
     components: {
       CartControl,
+      Food,
+      ShopCart,
     },
     created() {
       this.$store.dispatch("getShopGoods")
@@ -150,6 +164,10 @@
         const scrollY = this.tops[index]
         this.scrollY = scrollY
         this.foodsScroll.scrollTo(0, -scrollY, 300)
+      },
+      isShow(food) {
+        this.food = food
+        this.$refs.food.toggleShowFood()
       },
     },
     watch: {

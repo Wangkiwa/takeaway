@@ -20,6 +20,7 @@ import {
   Toast,
   Popup,
   ActionSheet,
+  Badge,
 } from "vant"
 Vue.use(Button)
 Vue.use(Swipe)
@@ -28,6 +29,7 @@ Vue.use(Dialog)
 Vue.use(Toast)
 Vue.use(Popup)
 Vue.use(ActionSheet)
+Vue.use(Badge)
 Vue.prototype.$api = api
 Vue.config.productionTip = false
 new Vue({

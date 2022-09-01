@@ -14,6 +14,7 @@ import {
   RECEIVE_INFO,
   INCREMENT_FOOD_COUNT,
   DECREMENT_FOOD_COUNT,
+  CLEAR_CART,
 } from "./mutation-types"
 import Vue from "vue"
 export default {
@@ -45,6 +46,8 @@ export default {
     if (!food.count) {
       // food.count = 1
       Vue.set(food, "count", 1)
+      // 当我第一次点加的时候，应该将该food存放到cartFoods中
+      state.cartFoods.push(food)
     } else {
       food.count++
     }
@@ -52,6 +55,19 @@ export default {
   [DECREMENT_FOOD_COUNT](state, { food }) {
     if (food.count) {
       food.count--
+      // 必须count不存在的时候移除
+      if (food.count === 0) {
+        //  当我第一次点减的时候，应该将该food移除
+        state.cartFoods.splice(state.cartFoods.indexOf(food), 1)
+      }
     }
+  },
+  [CLEAR_CART](state) {
+    // 必须清除count
+    state.cartFoods.forEach(item => {
+      item.count = 0
+    })
+    // 移除购物车
+    state.cartFoods = []
   },
 }

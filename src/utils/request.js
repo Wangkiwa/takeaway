@@ -1,5 +1,3 @@
-import { options } from "less"
-
 /*
  * @Descripttion: axios请求拦截封装
  * @Author: TaoWang
