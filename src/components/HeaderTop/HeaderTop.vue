@@ -48,6 +48,7 @@
         i {
           font-size: 0.4rem;
           margin-left: 0.3rem;
+          margin: 0 0.3rem;
         }
       }
       .header_search {

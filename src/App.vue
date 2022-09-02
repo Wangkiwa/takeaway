@@ -22,7 +22,6 @@
     },
     mounted() {
       this.$store.dispatch("getShopInfo")
-      this.$store.dispatch("getShopRatings")
     },
   }
 </script>

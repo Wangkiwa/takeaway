@@ -11,6 +11,12 @@ import "./mock/mockServer"
 import flexible from "flexible.js"
 import api from "./api/index"
 import store from "./store/index"
+import "./filters/"
+import VueLazyload from "vue-lazyload"
+import loading from "@/common/imgs/loading.gif"
+Vue.use(VueLazyload, {
+  loading,
+})
 flexible()
 import {
   Button,

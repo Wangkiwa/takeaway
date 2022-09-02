@@ -147,6 +147,9 @@
             }
           })
         }
+        // else {
+        //   this.scroll = null
+        // }
       },
     },
   }

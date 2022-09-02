@@ -134,7 +134,7 @@
   }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
   .shop_header {
     overflow: hidden;
     .shop_nav {

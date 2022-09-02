@@ -60,11 +60,12 @@ export default {
     }
   },
   // 获取商家评价列表
-  async getShopRatings({ commit }) {
+  async getShopRatings({ commit }, cb) {
     const res = await $api.shopRatings()
     if (res.code === 0) {
       commit(RECEIVE_RATINGS, { ratings: res.data })
     }
+    cb && cb()
   },
   // 获取商家商品列表
   async getShopGoods({ commit }) {

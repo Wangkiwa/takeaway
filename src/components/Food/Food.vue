@@ -8,7 +8,7 @@
     <!-- 弹出层 -->
     <van-popup class="shop_content" v-model="shopInfoPopup" round closeable>
       <div class="img-header">
-        <img :src="food.image" alt="" />
+        <img v-lazy="food.image" alt="" />
         <p class="foodpanel-desc">{{ food.info }}</p>
       </div>
       <div class="content">

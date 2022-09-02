@@ -16,4 +16,9 @@ export default {
       return preCount + food.count * food.price
     }, 0)
   },
+  positiveSize(state) {
+    return state.ratings.reduce((preventSize, good) => {
+      return preventSize + (good.rateType === 0 ? 1 : 0)
+    }, 0)
+  },
 }
