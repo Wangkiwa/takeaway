@@ -142,11 +142,10 @@
               this.scroll = new BetterScroll(".list-content", {
                 click: true,
               })
+            } else {
+              this.scroll.refresh() // 让滚动条刷新一下: 重新统计内容的高度
             }
           })
-        } else {
-          // 解决重复使用一个this.scroll的bug
-          this.scroll = null
         }
       },
     },
